@@ -1,0 +1,5 @@
+bin/
+arduinoCode/bin/
+cortexCode/bin/
+.tags
+.lvimrc
