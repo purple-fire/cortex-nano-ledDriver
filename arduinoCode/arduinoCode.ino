@@ -2,13 +2,14 @@
 #include <SoftwareSerial.h>
 
 //Use Software Serial to Read from Cortex
-SoftwareSerial mySerial(10, 11); // RX, TX
+SoftwareSerial mySerial(11, 12); // RX, TX
 
 // How many leds are in the strip?
-#define NUM_LEDS 10
+#define NUM_LEDS 26
 
 // Data pin that led data will be written out over
-#define DATA_PIN 7
+#define DATA1_PIN 3
+#define DATA2_PIN 6
 
 // This is an array of leds.  One item for each led in your strip.
 CRGB leds[NUM_LEDS];
@@ -23,7 +24,19 @@ void setup() {
       mySerial.begin(9600);
 	    // sanity check delay - allows reprogramming if accidently blowing power w/leds
       delay(2000);
-      FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);
+      
+      pinMode(2, OUTPUT);
+      pinMode(4, OUTPUT);
+      pinMode(5, OUTPUT);
+      pinMode(7, OUTPUT);
+      
+      digitalWrite(2, HIGH);
+      digitalWrite(4, LOW);
+      digitalWrite(5, HIGH);
+      digitalWrite(7, LOW);
+      
+      FastLED.addLeds<WS2812B, DATA1_PIN, RGB>(leds, NUM_LEDS);
+      FastLED.addLeds<WS2812B, DATA2_PIN, RGB>(leds, NUM_LEDS);
 }
 
 // This function runs over and over, and is where you do the magic to light
