@@ -20,6 +20,9 @@ int count = 0;
 //Store Team Value (0 BLUE,1 RED)
 int team = 0;
 
+//Store Cone Mode
+int coneMode = 0;
+
 // for incoming serial data
 int incomingByte = 0;
 
@@ -41,7 +44,27 @@ void setup() {
       
       FastLED.addLeds<WS2812B, DATA1_PIN, RGB>(leds, NUM_LEDS);
       FastLED.addLeds<WS2812B, DATA2_PIN, RGB>(leds, NUM_LEDS);
-      FastLED.setBrightness(100); 
+      FastLED.setBrightness(50); 
+}
+
+//Display Cone Stacking Mode on Upper Leds
+void coneModeLed(){
+    switch(coneMode) {
+       case 0:
+         leds[NUM_LEDS-1].setRGB( 0, 0, 0); 
+         break;
+       case 1:
+         leds[NUM_LEDS-1].setRGB( 0, 100, 0); 
+         break;
+       case 2:
+         leds[NUM_LEDS-1].setRGB( 100, 0, 0); 
+         break;
+       case 3:
+         leds[NUM_LEDS-1].setRGB( 0, 0, 100); 
+         break;
+       default:
+          break;
+    }  
 }
 
 // This function runs over and over, and is where you do the magic to light
@@ -61,7 +84,7 @@ void updateLEDs() {
       leds[i].setRGB( 0, 0, 0);
     }
    }
-
+   coneModeLed();
 }
 
 void loop(){
@@ -74,21 +97,34 @@ void loop(){
 
                 //Switch Based of Letter Receieved
                 switch(incomingByte) {
+                  case 'u':
+                    coneMode =0;
+                    break;
+                  case 'v':
+                    coneMode =1;
+                    break;
+                  case 'w':
+                    coneMode =2;
+                    break;
+                  case 'x':
+                    coneMode =3;
+                    break;
                   //Change to Blue Team
                   case 'y':
                     team =0;
                     break;
                   //Change to Red Team
                   case 'z':
-                    team = 1;
-                    break;
-                  //Set Count to What is Recieved
+                    team =1;
+                    break;                    
                   default:
-                    count = incomingByte-'a';
-                    updateLEDs();
+                    break;
                 }
-
-               
+                //Set Count to What is Recieved
+                if(incomingByte-'a'<16){
+                    count = incomingByte-'a';
+                }
+                updateLEDs();            
         }
         delay(100);
         FastLED.show();
